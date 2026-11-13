@@ -151,8 +151,8 @@ try{
   shell.hidden=!user;screen.hidden=!!user;
   document.getElementById('signed-in-user').textContent=user?.email||'';
   if(user){err.textContent='';form.reset()}
- },()=>{shell.hidden=true;screen.hidden=false;err.textContent='Anmeldung konnte nicht geprüft werden.'});
- form.addEventListener('submit',async e=>{e.preventDefault();err.textContent='';submit.disabled=true;submit.textContent='Anmeldung läuft …';try{await signInWithEmailAndPassword(auth,document.getElementById('auth-email').value.trim(),document.getElementById('auth-password').value)}catch(ex){err.textContent=ex.code==='auth/invalid-credential'?'E-Mail-Adresse oder Passwort nicht korrekt.':ex.code==='auth/too-many-requests'?'Zu viele Versuche. Bitte später erneut probieren.':'Anmeldung fehlgeschlagen. Bitte Verbindung und Firebase-Einstellungen prüfen.'}finally{submit.disabled=false;submit.textContent='Anmelden'}});
+ },()=>{shell.hidden=true;screen.hidden=false;err.textContent='Firebase-Sitzungsprüfung fehlgeschlagen. Bitte Seite neu laden.'});
+ form.addEventListener('submit',async e=>{e.preventDefault();err.textContent='';submit.disabled=true;submit.textContent='Anmeldung läuft …';try{await signInWithEmailAndPassword(auth,document.getElementById('auth-email').value.trim(),document.getElementById('auth-password').value)}catch(ex){err.textContent=ex.code==='auth/invalid-credential'?'E-Mail-Adresse oder Passwort nicht korrekt.':ex.code==='auth/too-many-requests'?'Zu viele Versuche. Bitte später erneut probieren.':'Firebase-Fehler: '+String(ex.code||'unbekannt')+' – '+String(ex.message||'Keine Details').replace(/\([^)]*\)/g,'').slice(0,180)}finally{submit.disabled=false;submit.textContent='Anmelden'}});
  document.getElementById('signout').addEventListener('click',async()=>{try{await signOut(auth)}catch{alert('Abmelden fehlgeschlagen. Bitte erneut versuchen.')}});
 }catch(e){err.textContent='Firebase konnte nicht gestartet werden. Internetverbindung prüfen.'}
 </script></body></html>
